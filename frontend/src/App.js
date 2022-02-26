@@ -22,96 +22,159 @@ function App() {
         <Navigation />
 
         <Routes>
-          <Route path="/" element={<GuestRoute  >
-            <Home />
-          </GuestRoute>
-          } />
+
+
+          {
+            isAuth ? (
+              <Route path="/" element={
+                <GuestRoute />
+              } />
+            ) : (<Route path="/" element={<Home />} />)
+          }
+
+
 
           <Route path="/rooms" element={<Rooms />} />
 
-          <Route path="/authenticate"
-            element={<GuestRoute  >
-              <Authenticate />
-            </GuestRoute>
-            } />
-
-          <Route path="/activate" element={
-            <SemiProtectedRoute>
-              <Activate />
-            </SemiProtectedRoute>
-          } />
+          <Route path="/" element={<Home />} />
 
 
-          <Route path="/rooms" element={
-            <ProtectedRoute>
-              <Rooms />
-            </ProtectedRoute>
-          } />
+
+          {/* Authenticate page per jane ke liya */}
+          {
+            isAuth ? (
+              <Route path="/authenticate" element={
+                <GuestRoute />
+              } />
+            ) : (<Route path="/authenticate" element={<Authenticate />} />)
+          }
+
+          {/* Activate ke ender na ja ske lisliya */}
+          {
+            !isAuth ? (
+              <Route path="/activate" element={
+                <SemiProtectedRoute pathRen="/" />
+              } />
+            )
+              : isAuth && !user.activated ? (<Route path="/activate" element={<Activate />} />) :
+                (<SemiProtectedRoute pathRen="/rooms" />)
+          }
+
+          {/* room ke enter na ho isliya */}
+          
+          {
+            !isAuth ? (
+              <Route path="/rooms" element={
+                <ProtectedRoute pathRen="/" />
+              } />
+            )
+            : isAuth && !user.activated ? (<Route path="/rooms" element={<ProtectedRoute pathRen="/activate" /> }/>)
+
+                : (<Route path="/rooms" element={<Rooms />} />)
+
+          }
+
 
         </Routes>
-
-
-        {/* <Route path="/register"  element={<Register/>} />  */}
-
 
       </BrowserRouter>
     </>
   );
 }
 
-const GuestRoute = ({ children }) => {
-  return (
-    isAuth ? (
-      <Navigate to={
-        {
-          pathname: "/rooms",
-        }
-      } />
-    ) : (
-      children
-    )
-
-  );
-};
+const GuestRoute = ({ location }) => (
+  <Navigate to={
+    {
+      pathname: "/rooms",
+      state: { from: location },
+    }
+  } />
+)
 
 
-const SemiProtectedRoute = ({ children }) => {
-  return (
-    !isAuth ? (
-      <Navigate to={{
-        pathname: "/"
-      }}
-      />
-    ) : isAuth && !user.activated ? (
-      children
-    ) : (
-      <Navigate to={{
-        pathname: "/rooms"
-      }}
-      />
-    )
-  );
+const SemiProtectedRoute = ({ location }, pathRen) => (
+  <Navigate to={
+    {
+      pathname: pathRen,
+      state: { from: location },
+    }
+  } />
+)
 
-};
 
-const ProtectedRoute = ({ children }) => {
-  return (
-    !isAuth ? (
-      <Navigate to={{
-        pathname: "/",
-      }}
-      />
-    ) : isAuth && !user.activated ? (
-      <Navigate to={{
-        pathname: "/activate",
-      }}
-      />
-    ) : (
-      children
-    )
-  );
+const ProtectedRoute = ({ location }, pathRen) => (
+  <Navigate to={
+    {
+      pathname: pathRen,
+      state: { from: location },
+    }
+  } />
+)
 
-};
+
+
+
+
+
+
+
+
+
+// const GuestRoute = ({ children }) => {
+//   return (
+//     isAuth ? (
+//       <Navigate to={
+//         {
+//           pathname: "/rooms",
+//         }
+//       } />
+//     ) : (
+//       children
+//     )
+
+//   );
+// };
+
+
+
+
+// const SemiProtectedRoute = ({ children }) => {
+//   return (
+//     !isAuth ? (
+//       <Navigate to={{
+//         pathname: "/"
+//       }}
+//       />
+//     ) : isAuth && !user.activated ? (
+//       children
+//     ) : (
+//       <Navigate to={{
+//         pathname: "/rooms"
+//       }}
+//       />
+//     )
+//   );
+
+// };
+
+// const ProtectedRoute = ({ children }) => {
+//   return (
+//     !isAuth ? (
+//       <Navigate to={{
+//         pathname: "/",
+//       }}
+//       />
+//     ) : isAuth && !user.activated ? (
+//       <Navigate to={{
+//         pathname: "/activate",
+//       }}
+//       />
+//     ) : (
+//       children
+//     )
+//   );
+
+// };
 
 
 export default App;
