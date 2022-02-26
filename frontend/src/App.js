@@ -7,7 +7,7 @@ import Authenticate from './Pages/Authenticate/Authenticate';
 import Rooms from './Pages/Rooms/Rooms';
 import Activate from './Pages/Activate/Activate';
 
-const isAuth = true;
+const isAuth = false;
 const user = {
   activated: false,
 }
@@ -23,6 +23,9 @@ function App() {
 
         <Routes>
 
+          <Route path="/rooms" element={<Rooms />} />
+
+          <Route path="/" element={<Home />} />
 
           {
             isAuth ? (
@@ -31,14 +34,6 @@ function App() {
               } />
             ) : (<Route path="/" element={<Home />} />)
           }
-
-
-
-          <Route path="/rooms" element={<Rooms />} />
-
-          <Route path="/" element={<Home />} />
-
-
 
           {/* Authenticate page per jane ke liya */}
           {
@@ -57,22 +52,25 @@ function App() {
               } />
             )
               : isAuth && !user.activated ? (<Route path="/activate" element={<Activate />} />) :
-                (<SemiProtectedRoute pathRen="/rooms" />)
+                (<Route path="/activate" element= {<SemiProtectedRoute pathRen="/rooms" />}/> )
           }
 
           {/* room ke enter na ho isliya */}
-          
+
           {
             !isAuth ? (
               <Route path="/rooms" element={
                 <ProtectedRoute pathRen="/" />
               } />
             )
-            : isAuth && !user.activated ? (<Route path="/rooms" element={<ProtectedRoute pathRen="/activate" /> }/>)
+              : isAuth && !user.activated ? (<Route path="/rooms" element={<ProtectedRoute pathRen="/activate" />} />)
 
                 : (<Route path="/rooms" element={<Rooms />} />)
 
           }
+
+
+
 
 
         </Routes>
@@ -82,7 +80,7 @@ function App() {
   );
 }
 
-const GuestRoute = ({ location }) => (
+const GuestRoute = ({ location },) => (
   <Navigate to={
     {
       pathname: "/rooms",

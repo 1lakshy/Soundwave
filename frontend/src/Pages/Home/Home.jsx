@@ -22,13 +22,13 @@ function Home() {
         </p>
 
         <div>
-          <Button onClick={startRegister} text="Get your Username" />
+          <Button onClick={startRegister} text="Start" />
         </div>
 
         <div className={styles.signinWrapper}>
 
           <span className={styles.hasinvite}>Have an invite text ?</span>
-          <Link to="/login" style={{ color: "#0077ff", fontSize: 14, marginLeft: 10, textDecoration: "none", fontWeigth: "400" }}>Sign in</Link>
+          {/* <Link to="/login" style={{ color: "#0077ff", fontSize: 14, marginLeft: 10, textDecoration: "none", fontWeigth: "400" }}>Sign in</Link> */}
 
         </div>
       </Card>
