@@ -5,6 +5,7 @@ import Email from './Email/Email';
 import styles from "./StepPhoneEmail.module.css"
 
 
+
 const PhoneEmailMap = {
     phone: Phone,
     email: Email,
@@ -19,10 +20,17 @@ function StepPhoneEmail({ onNext }) {
     return (
         <>
             <div className={styles.cardWrapper}>
-              <div>
+              <div className={styles.container}>
                 <div className={styles.buttonWrap}>
-                    <button onClick={() => setType("phone")}>Phone</button>
-                    <button onClick={() => setType("email")}>Email</button>
+
+                    <button className={`${styles.tabButton} ${type === "phone" ? styles.active : ""}`} onClick={() => setType("phone")}>
+                        <img style={{width:25, height:25}} src="/images/phone.png" alt="phone" />
+                    </button>
+
+                    <button className={`${styles.tabButton} ${type === "email" ? styles.active : ""}`} onClick={() => setType("email")}>
+                    <img src="/images/email.png" alt="email" />
+                    </button>
+
                 </div>
                 <Component onNext={onNext} />
                 </div>

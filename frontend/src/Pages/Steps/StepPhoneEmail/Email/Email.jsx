@@ -1,8 +1,30 @@
-import React from 'react'
+import React, { useState } from 'react'
+import Card from "../../../../Components/Shared/Card/Card.jsx"
+import styles from "../StepPhoneEmail.module.css"
+import TextInput from '../../../../Components/Shared/TextInput/TextInput.jsx'
+import Button from "../../../../Components/Shared/Button/Button.jsx"
+import StepPhoneEmail from '../../StepPhoneEmail/StepPhoneEmail';
+import StepOtp from '../../StepOtp/StepOtp';
 
-function Email() {
+function Email({onNext}) {
+
+  const [email, setEmail] = useState("");
+
   return (
-    <div>Email</div>
+    <Card style={styles.card} title="Enter Your Email" icon="email-1">
+
+      <TextInput value={email} onChange={(e) => setEmail(e.target.value)} />
+      <div>
+        <div className={styles.actionButtonWrap}>
+          <Button text="Next" onClick={onNext} />
+        </div>
+      </div>
+
+      <p className={styles.bottomParagraph}>
+        Please enter your Email Id <br /> to get otp
+      </p>
+
+    </Card>
   )
 }
 

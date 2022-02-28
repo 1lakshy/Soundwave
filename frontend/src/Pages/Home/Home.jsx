@@ -16,7 +16,7 @@ function Home() {
   return (<>
     <div className={styles.cardWrapper}>
 
-      <Card style={styles.card} title="Welcome to Codershouse!!" icon="hand-logo">
+      <Card style={styles.card} title="Welcome to Callzeen" icon="hand-logo">
         <p className={styles.text}>
           Aenean commodo ligula eget dolor.Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim
         </p>
