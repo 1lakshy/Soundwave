@@ -18,9 +18,7 @@ function Phone({onNext}) {
     <Card style={styles.card} title="Under Construction" icon="telephone" >
 
     <img src="/images/construction.png" />
-
-
-      {/* <TextInput value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
+      <TextInput value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
 
       <div>
         <div className={styles.actionButtonWrap}>
@@ -29,7 +27,7 @@ function Phone({onNext}) {
       </div>
       <p className={styles.bottomParagraph}>
         Please enter your mobile number <br /> to get otp 
-      </p>*/}
+      </p>
 
     </Card>
   )
