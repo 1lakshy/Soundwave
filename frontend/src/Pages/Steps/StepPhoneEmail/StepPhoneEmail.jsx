@@ -29,13 +29,10 @@ function StepPhoneEmail({ onNext }) {
                     <button className={`${styles.tabButton} ${type === "email" ? styles.active : ""}`} onClick={() => setType("email")}>
                     <img src="/images/email.png" alt="email" />
                     </button>
-
                 </div>
                 <Component onNext={onNext} />
                 </div>
             </div>
-
-          
         </>
     )
 }

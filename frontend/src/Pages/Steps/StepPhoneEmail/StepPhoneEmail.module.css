@@ -27,14 +27,12 @@
     margin-left: 5px;
 }
 
-.active{
+/* .active{
     background: #0077ff;
-}
-
+} */
 .actionButtonWrap{
     margin-top: 20px;
 }
-
 .bottomParagraph{
     color: rgb(216, 212, 212);
     font-size: 14px;
