@@ -11,13 +11,9 @@ import { useSelector } from "react-redux"
 
 
 function App() {
-
   const { user , isAuth} = useSelector((state) => state.auth )
-
-
   return (
     <>
-
       <BrowserRouter>
 
         <Navigation />
@@ -35,8 +31,6 @@ function App() {
               } />
             ) : (<Route path="/" element={<Home />} />)
           }
-
-          {/* Authenticate page per jane ke liya */}
           {
             isAuth ? (
               <Route path="/authenticate" element={
