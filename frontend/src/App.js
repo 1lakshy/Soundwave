@@ -7,20 +7,17 @@ import Authenticate from './Pages/Authenticate/Authenticate';
 import Rooms from './Pages/Rooms/Rooms';
 import Activate from './Pages/Activate/Activate';
 import { useSelector } from "react-redux"
-
-
-
 function App() {
   const { user , isAuth} = useSelector((state) => state.auth )
   return (
     <>
       <BrowserRouter>
-
         <Navigation />
 
         <Routes>
 
           <Route path="/rooms" element={<Rooms />} />
+          <Route path="/room" element={<Rooms />} />
 
           <Route path="/" element={<Home />} />
 
@@ -63,11 +60,6 @@ function App() {
                 : (<Route path="/rooms" element={<Rooms />} />)
 
           }
-
-
-
-
-
         </Routes>
 
       </BrowserRouter>
