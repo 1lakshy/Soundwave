@@ -4,7 +4,6 @@ import "../../../App.css"
 
 function Card({ title, icon, children }) {
   return (<>
-  
     <div className={styles.card}>
     <div>
       <div className={styles.headingWrapper}>
@@ -13,7 +12,6 @@ function Card({ title, icon, children }) {
       </div>
       {children}
       </div>
-
     </div>
     </>
   )
