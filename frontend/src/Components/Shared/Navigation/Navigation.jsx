@@ -12,18 +12,15 @@ const brandStyle={
   display: "flex",
   alignItems:"center"
 };
-
 const logoText={
   marginLeft:"10px"
 };
-
-
   return (
    <>
    <nav className={`${styles.navbar} container`}>
      <Link to="/" style={brandStyle}>
      <img style={{ width:50 , height:50}} src="/images/logo.png" alt="logo" />
-     <span style={logoText}>Callzeen</span>
+     <span style={logoText}>Soundwave</span>
      </Link>
    </nav>
    </>
