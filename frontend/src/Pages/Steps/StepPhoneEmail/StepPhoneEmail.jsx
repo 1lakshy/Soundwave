@@ -12,11 +12,9 @@ const PhoneEmailMap = {
 }
 
 function StepPhoneEmail({ onNext }) {
-
     const [type, setType] = useState("phone");
 
     const Component = PhoneEmailMap[type];
-
     return (
         <>
             <div className={styles.cardWrapper}>
