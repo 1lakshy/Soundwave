@@ -9,20 +9,19 @@
 img{
     max-width: 100%;
     height: auto;
-}
 
+}
 body{
  font-family: 'Nunito', sans-serif;
  background-image: url("../public/images/Background.jpg");
  background-size: auto;
-
  color: yellow;
 }
-
 .container{
     width:1200px;
     max-width:90%;
     margin: 0 auto;
+
 }
 
 p,span{
