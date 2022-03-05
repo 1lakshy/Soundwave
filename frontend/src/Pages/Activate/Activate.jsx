@@ -7,12 +7,11 @@ function Activate() {
     1: StepName,
     2: StepAvatar
   }
-
   const onNext =()=> {
     setStep(step + 1)
   }
   const [step, setStep] = useState(1)
-
+  console.log(step);
   const Step = steps[step]
 
   return (
