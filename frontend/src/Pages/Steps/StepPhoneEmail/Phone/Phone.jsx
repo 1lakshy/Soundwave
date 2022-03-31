@@ -5,11 +5,14 @@ import styles from "../StepPhoneEmail.module.css"
 import TextInput from '../../../../Components/Shared/TextInput/TextInput.jsx'
 import StepPhoneEmail from '../../StepPhoneEmail/StepPhoneEmail';
 import StepOtp from '../../StepOtp/StepOtp';
+import { sendOtp } from "../../../../http/index.js"
+import {useDispatch} from "react-redux"
 
 function Phone({onNext}) {
 
-
   const [phoneNumber, setPhoneNumber] = useState("");
+
+
 
   return (
     <Card style={styles.card} title="Enter Your PhoneNumber" icon="telephone">

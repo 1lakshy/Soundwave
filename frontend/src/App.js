@@ -6,13 +6,15 @@ import Navigation from './Components/Shared/Navigation/Navigation';
 import Authenticate from './Pages/Authenticate/Authenticate';
 import Rooms from './Pages/Rooms/Rooms';
 import Activate from './Pages/Activate/Activate';
+import { useSelector } from "react-redux"
 
-const isAuth = false;
-const user = {
-  activated: false,
-}
+
+
 
 function App() {
+
+  const { user , isAuth} = useSelector((state) => state.auth )
+
 
   return (
     <>

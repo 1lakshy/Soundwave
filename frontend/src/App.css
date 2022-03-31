@@ -13,7 +13,9 @@ img{
 
 body{
  font-family: 'Nunito', sans-serif;
- background: #121212;
+ background-image: url("../public/images/Background.jpg");
+ background-size: auto;
+
  color:#fff;
 }
 
