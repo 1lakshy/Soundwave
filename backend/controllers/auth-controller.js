@@ -104,7 +104,7 @@ class AuthController {
                 res.status(400).json({ otp: "expires!!" })
             }
 
-            const otp = 5038
+            const {otp} = req.body
 
             const data = `${otp}.${newExpires}`;
             const newHash = await bcrypt.hash(data, 10)
@@ -138,13 +138,21 @@ class AuthController {
                 activated: false
             })
 
+
+            await TokenService.storeRefreshToken(refreshToken , user._id)
             res.cookie("refreshToken", refreshToken,  {
                 expires: new Date(Date.now() + 1000 * 60 * 60 * 60 * 24 * 30) ,
                 httpOnly : true
             })
 
+            res.cookie("accessToken", accessToken,  {
+                expires: new Date(Date.now() + 1000 * 60 * 60 * 60 * 24 * 30) ,
+                httpOnly : true
+            })
+
+
             const userDto = new UserDto(user)
-            res.json({ accessToken , user: userDto})
+            res.json({ auth:true , user: userDto})
 
 
         } catch (err) {

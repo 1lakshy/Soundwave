@@ -16,11 +16,20 @@ body{
  background-image: url("../public/images/Background.jpg");
  background-size: auto;
 
- color:#fff;
+ color: yellow;
 }
 
 .container{
     width:1200px;
     max-width:90%;
     margin: 0 auto;
+}
+
+p,span{
+    color:coral
+}
+.cardWrapper{
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

@@ -4,6 +4,7 @@ import styles from "./Home.module.css";
 import Card from '../../Components/Shared/Card/Card';
 import Button from '../../Components/Shared/Button/Button';
 
+
 function Home() {
   const navigate = useNavigate();
 

@@ -32,7 +32,7 @@ function App() {
           {
             isAuth ? (
               <Route path="/" element={
-                <GuestRoute />
+                <Activate />
               } />
             ) : (<Route path="/" element={<Home />} />)
           }
@@ -41,7 +41,7 @@ function App() {
           {
             isAuth ? (
               <Route path="/authenticate" element={
-                <GuestRoute />
+                <Activate />
               } />
             ) : (<Route path="/authenticate" element={<Authenticate />} />)
           }
@@ -54,7 +54,7 @@ function App() {
               } />
             )
               : isAuth && !user.activated ? (<Route path="/activate" element={<Activate />} />) :
-                (<Route path="/activate" element= {<SemiProtectedRoute pathRen="/rooms" />}/> )
+                (<Route path="/activate" element= {<SemiProtectedRoute pathRen="/activate" />}/> )
           }
 
           {/* room ke enter na ho isliya */}
@@ -65,7 +65,7 @@ function App() {
                 <ProtectedRoute pathRen="/" />
               } />
             )
-              : isAuth && !user.activated ? (<Route path="/rooms" element={<ProtectedRoute pathRen="/activate" />} />)
+              : isAuth && !user.activated ? (<Route path="/activate" element={<ProtectedRoute pathRen="/activate" />} />)
 
                 : (<Route path="/rooms" element={<Rooms />} />)
 

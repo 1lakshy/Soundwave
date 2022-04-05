@@ -10,7 +10,7 @@ const cors = require("cors")
 
 // to remove cors error in browser 
 const corsOptions = {
-
+    credentials:true,
     origin:["http://localhost:3000"]
 }
 
