@@ -7,7 +7,8 @@
     text-align: center;
     border-radius: 25px;
     background-image: url(../../../../public/images/blob.svg);
-
+    background-size:200px 200px;
+    background-repeat: no-repeat;
 
    }
 
@@ -16,7 +17,7 @@
        display: flex;
        align-items:center;
        justify-content:center ;
-       margin-bottom: 30px;
+       margin-bottom: 10px;
    }
    .heading{
        color: "rgba(247, 202, 24,1)";
