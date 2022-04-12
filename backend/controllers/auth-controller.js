@@ -140,12 +140,12 @@ class AuthController {
 
 
             await TokenService.storeRefreshToken(refreshToken , user._id)
-            res.cookie("refreshToken", refreshToken,  {
+             res.cookie("refreshToken", refreshToken,  {
                 expires: new Date(Date.now() + 1000 * 60 * 60 * 60 * 24 * 30) ,
                 httpOnly : true
             })
 
-            res.cookie("accessToken", accessToken,  {
+             res.cookie("accessToken", accessToken,  {
                 expires: new Date(Date.now() + 1000 * 60 * 60 * 60 * 24 * 30) ,
                 httpOnly : true
             })

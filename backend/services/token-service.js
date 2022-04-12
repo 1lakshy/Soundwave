@@ -29,9 +29,11 @@ class TokenService {
         }catch(err){
             console.log(err.message)
         }
-    
 
+    }
 
+    async verifyAccessToken(token){
+        return jwt.verify(token , accessTokenSecret )
     }
 }
 

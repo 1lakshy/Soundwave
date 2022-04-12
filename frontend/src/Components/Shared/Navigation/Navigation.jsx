@@ -22,7 +22,7 @@ const logoText={
    <>
    <nav className={`${styles.navbar} container`}>
      <Link to="/" style={brandStyle}>
-     <img style={{ width:50 , height:50}} src="/images/hand-logo.png" alt="logo" />
+     <img style={{ width:50 , height:50}} src="/images/logo.png" alt="logo" />
      <span style={logoText}>Callzeen</span>
      </Link>
    </nav>

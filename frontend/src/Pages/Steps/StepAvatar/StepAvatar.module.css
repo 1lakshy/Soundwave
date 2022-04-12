@@ -53,8 +53,10 @@
     
 }
 .avatar{
-    width: 150px ;
-    height: 150px;
+    width: 140px ;
+    height: 140px;
+    border: 1px solid white;
+    border-radius:50%;
 }
 
 .avatarInput{
