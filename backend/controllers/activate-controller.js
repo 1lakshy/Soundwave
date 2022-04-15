@@ -29,24 +29,25 @@ class ActivateController {
       "base64"
     );
 
-    if (typeof buffer === "undefined") {
-      Jimp.read(`${avatar}`)
-        .then((photo) => {
-          return photo
-            .resize(140, Jimp.AUTO) // resize
+    console.log(typeof buffer);
 
-            .write(path.resolve(__dirname, `../storage/${imagePath}`)); // save
-        })
-        .catch((err) => {
-          res.status(500).json({
+    if (typeof buffer === "object") {
+      const defAva = await Jimp.read(`${avatar}`);
+      try {
+        defAva
+          .resize(140, Jimp.AUTO)
+          .write(path.resolve(__dirname, `../storage/${imagePath}`));
+      } catch (err) {
+        res
+          .status(500)
+          .json({
             message: "avatar not send tryed to set default avatar but failed",
           });
-          console.error(err);
-        });
-        console.log("ok in null")
-    }
-    else{
-      console.log("ok in else")
+      }
+
+      console.log("ok in object");
+    } else {
+      console.log("ok in else");
       try {
         const jimResp = await Jimp.read(buffer);
         jimResp
