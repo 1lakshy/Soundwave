@@ -8,6 +8,9 @@ const router = require("./routes");
 const cors = require("cors")
 
 app.use(cookieParser());
+
+// to serve uploaded image directly as url
+app.use("/storage" , express.static("storage"))
 // to remove cors error in browser 
 const corsOptions = {
     credentials:true,

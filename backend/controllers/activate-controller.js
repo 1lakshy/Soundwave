@@ -2,13 +2,20 @@ const Jimp = require("jimp");
 const path = require("path");
 const userService = require("../services/user-service");
 const UserDto = require("../dtos/user-dtos");
+const imageToBase64 = require("image-to-base64");
 
 class ActivateController {
   async activate(req, res) {
     // activation logic
 
-    const { name, avatar } = req.body;
-    if (!name || !avatar) {
+    var { name, avatar, ava } = req.body;
+
+    if (!avatar) {
+      avatar = `../avatar/av${ava}.png`;
+    }
+    console.log(`${name} , ${avatar}`);
+
+    if (!name || !ava) {
       res.status(400).json({ message: "All fields are required" });
     }
 
@@ -17,19 +24,37 @@ class ActivateController {
 
     //  image Base64
 
-    const buffer = Buffer.from(
+    const buffer = await Buffer.from(
       avatar.replace(/^data:image\/png;base64,/, ""),
       "base64"
     );
 
-    try {
-      const jimResp = await Jimp.read(buffer);
-      jimResp
-        .size(140, Jimp.AUTO)
-        .write(path.resolve(__dirname, `../storage/${imagePath}`));
-    } catch (err) {
-     
-      res.status(500).json({ message: "could not process image" });
+    if (typeof buffer === "undefined") {
+      Jimp.read(`${avatar}`)
+        .then((photo) => {
+          return photo
+            .resize(140, Jimp.AUTO) // resize
+
+            .write(path.resolve(__dirname, `../storage/${imagePath}`)); // save
+        })
+        .catch((err) => {
+          res.status(500).json({
+            message: "avatar not send tryed to set default avatar but failed",
+          });
+          console.error(err);
+        });
+        console.log("ok in null")
+    }
+    else{
+      console.log("ok in else")
+      try {
+        const jimResp = await Jimp.read(buffer);
+        jimResp
+          .resize(140, Jimp.AUTO)
+          .write(path.resolve(__dirname, `../storage/${imagePath}`));
+      } catch (err) {
+        res.status(500).json({ message: "could not process image" });
+      }
     }
 
     const userId = req.user._id;

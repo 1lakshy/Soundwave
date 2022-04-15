@@ -6,6 +6,9 @@ import styles from "./StepAvatar.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { setAvatar } from "../../../store/activateSlice.js";
 import { activate } from "../../../http/index.js";
+import { setAuth } from "../../../store/authSlice.js"
+
+
 
 function StepAvatar({ onNext }) {
   const ava = Math.floor(Math.random() * 10 + 1);
@@ -14,7 +17,33 @@ function StepAvatar({ onNext }) {
   const { name, avatar } = useSelector((state) => state.activate);
   const [image, setImage] = useState(`/images/avatar/av${ava}.png`);
 
+  // const reader = new FileReader();
+  // reader.readAsDataURL(image)
+
+  // reader.onloadend = function () {
+  //   console.log(reader.result);
+  //   setImage(reader.result);
+  //   dispatch(setAvatar(reader.result));
+  // };
+
+
+  // tryed to fix default image error
+// function defImg(){
+  
+//   const reader = new FileReader();
+//   reader.readAsDataURL(image.files[0])
+
+//   reader.onload = function () {
+//     console.log(reader.result);
+//     setImage(reader.result);
+//     dispatch(setAvatar(reader.result));
+//   }
+
+
+
+
   function captureImage(e) {
+    
     const file = e.target.files[0];
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -27,10 +56,17 @@ function StepAvatar({ onNext }) {
   }
 
   //  test@gmail.com
+console.log(" ok  outside submit")
 
   async function submit() {
     try {
-      const { data } = await activate({ name, avatar });
+      
+      console.log("ok inside submit")
+      const { data } = await activate({ name, avatar ,ava });
+
+      if(data.auth){
+        dispatch(setAuth(data))
+      }
     } catch (err) {
       console.log(err);
     }
@@ -50,6 +86,7 @@ function StepAvatar({ onNext }) {
         {/* image selection from device */}
         <div className="">
           <input
+          
             onChange={captureImage}
             type="file"
             id="avatarInput"

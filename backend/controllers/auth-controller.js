@@ -33,10 +33,14 @@ class AuthController {
             console.log("otp")
             const ttl = 1000 * 60 * 10;
             const expires = Date.now() + ttl
-            const data = `${otp}.${expires}`;
-            const hash = await bcrypt.hash(data, 10);
+            const data1 = `${otp}`;
+            const data2 = `${expires}`;
+            const hash1 = await bcrypt.hash(data1, 10);
+            const hash2 = await bcrypt.hash(data2, 10);
+           
+            const hash = `${hash1}.${hash2}`
 
-            console.log(data)
+            console.log(hash)
 
             // res.json({ hash : hash});
 
