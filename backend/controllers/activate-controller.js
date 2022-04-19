@@ -1,8 +1,11 @@
+require("dotenv").config();
+
 const Jimp = require("jimp");
 const path = require("path");
 const userService = require("../services/user-service");
 const UserDto = require("../dtos/user-dtos");
 const imageToBase64 = require("image-to-base64");
+const fs = require("fs")
 
 class ActivateController {
   async activate(req, res) {
@@ -11,9 +14,16 @@ class ActivateController {
     var { name, avatar, ava } = req.body;
 
     if (!avatar) {
-      avatar = `../avatar/av${ava}.png`;
+      // agar direct path likenge to yoh root folder se find karne ki kosis kara ha
+      avatar = path.join( __dirname, `../avatar/av${ava}.png`);
     }
-    console.log(`${name} , ${avatar}`);
+    // itb will return buffer 
+    const avaBuf = fs.readFileSync(`${avatar}`)
+    console.log(avaBuf)
+
+    // console.log( typeof avatar)
+    // console.log (`${avatar}`)
+    // console.log(`${name} , ${avatar}`);
 
     if (!name || !ava) {
       res.status(400).json({ message: "All fields are required" });
@@ -32,7 +42,7 @@ class ActivateController {
     console.log(typeof buffer);
 
     if (typeof buffer === "object") {
-      const defAva = await Jimp.read(`${avatar}`);
+      const defAva = await Jimp.read(avaBuf);
       try {
         defAva
           .resize(140, Jimp.AUTO)
