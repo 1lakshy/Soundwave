@@ -1,0 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&family=Ubuntu:wght@300;400;500;700&display=swap');
+body{
+    background-color: rgb(241 245 249);
+}
+
+.card{
+  margin: 1.25rem .725rem;
+    background-color:#fff;
+    overflow-x: hidden;
+   
+    border-radius: 1.5rem;
+}
+
+.bar{
+    @apply h-12 sticky top-0 flex justify-between items-center px-0.5 rounded-b-2xl shadow-lg;
+
+/* From https://css.glass */
+background: rgba(247, 246, 247, 0.11);
+
+box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+backdrop-filter: blur(7.4px);
+-webkit-backdrop-filter: blur(7.4px);
+border: 1px solid rgba(247, 246, 247, 0.05);
+
+}
+
+.likeImg{
+    @apply w-8 h-8;
+}
+
+.LikeText{
+    font-size: medium;
+    font-weight: 700;
+}
+
+.navBar{
+    box-shadow: 10px 10px 264px 32px rgba(0,0,0,0.75);
+-webkit-box-shadow: 10px 10px 264px 32px rgba(0,0,0,0.75);
+-moz-box-shadow: 10px 10px 264px 32px rgba(0,0,0,0.75);
+}
+
+
+    .nav{
+        @apply h-[4.5rem] fixed bottom-0 bg-white rounded-t-[2rem] min-w-full flex justify-around items-center
+ 
+    }
+
+    .HeadingFont{
+        font-family: 'Roboto Condensed', sans-serif;
+        font-weight: 700;
+        
+        @apply text-5xl text-slate-500
+    }
+    .HeadingFont2{
+        font-family: 'Roboto Condensed', sans-serif;
+        font-weight: 700;
+        
+        @apply text-2xl text-slate-600
+    }
+
+    .message{
+        @apply bg-blue-200 h-28 w-[calc(100%-5rem)] ml-4 rounded-2xl pl-2
+    }
+
+    .avatar{
+        @apply  h-12 w-12 ml-2
+    }
+
+    .messageArea{
+        @apply bg-red-100 h-[calc(100vh-10rem)] overflow-y-auto
+    }
