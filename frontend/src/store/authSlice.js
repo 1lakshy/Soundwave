@@ -2,7 +2,12 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
   isAuth: false,
-  user: null,
+  user: {
+    activated: false,
+    email:"",
+    name:"",
+    avatar:""
+  },
   otp: {
     email:"",
     hash:""
@@ -16,8 +21,20 @@ export const authSlice = createSlice({
     setAuth: (state, action) => {
       const { user } = action.payload;
 
-      state.user = user;
-      state.isAuth = true;
+      state.user.email = user.email;
+      state.user.name = user.name;
+      state.user.avatar = user.avatar;
+      state.user.activated = user.activated;
+
+      
+
+      if(user.email === ""){
+        state.isAuth = false;
+
+      }else{
+        state.isAuth = true;
+      }
+
     },
     setOtp: (state, action) =>{
 

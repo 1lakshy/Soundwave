@@ -6,15 +6,30 @@ const cookieParser = require("cookie-parser")
 const app = express();
 const router = require("./routes");
 const cors = require("cors")
+const passport = require("passport")
+
+const authRoute = require("./routes/auth.js")
+
+var session = require('cookie-session');
+app.use(session({ name:"session",keys:["secret"],maxAge:24*60*60*1000}));
 
 app.use(cookieParser());
+
+// passport require
+require("./passport/passport")(passport)
+app.use(passport.initialize())
+app.use(passport.session())
+
+// auth with passport js
+app.use("/auth",authRoute)
 
 // to serve uploaded image directly as url
 app.use("/storage" , express.static("storage"))
 // to remove cors error in browser 
 const corsOptions = {
     credentials:true,
-    origin:["http://localhost:3000"]
+    origin:["http://localhost:3000","http://localhost:5500"],
+    methods:"GET,POST,PUT,DELETE"
 }
 
 app.use(cors(corsOptions));

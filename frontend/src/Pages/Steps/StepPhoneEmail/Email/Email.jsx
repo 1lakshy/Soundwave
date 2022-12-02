@@ -1,36 +1,31 @@
-import React, { useState } from 'react'
-import Card from "../../../../Components/Shared/Card/Card.jsx"
-import styles from "../StepPhoneEmail.module.css"
-import TextInput from '../../../../Components/Shared/TextInput/TextInput.jsx'
-import Button from "../../../../Components/Shared/Button/Button.jsx"
-import StepPhoneEmail from '../../StepPhoneEmail/StepPhoneEmail';
-import StepOtp from '../../StepOtp/StepOtp';
-import { sendOtp } from "../../../../http/index.js"
-import { setOtp } from "../../../../store/authSlice.js"
-import {useDispatch} from "react-redux"
+import React, { useState } from 'react';
+import Card from '../../../../Components/Shared/Card/Card.jsx';
+import styles from '../StepPhoneEmail.module.css';
+import TextInput from '../../../../Components/Shared/TextInput/TextInput.jsx';
+import Button from '../../../../Components/Shared/Button/Button.jsx';
+// import StepPhoneEmail from '../../StepPhoneEmail/StepPhoneEmail';
+// import StepOtp from '../../StepOtp/StepOtp';
+import { sendOtp } from '../../../../http/index.js';
+import { setOtp } from '../../../../store/authSlice.js';
+import { useDispatch } from 'react-redux';
 
-function Email({onNext}) {
+function Email({ onNext }) {
+  const [email, setEmail] = useState('');
+  const dispatch = useDispatch();
 
-  const [email, setEmail] = useState("");
-  const dispatch = useDispatch()
-
-  async function submit(){
-
+  async function submit() {
     // const res = await sendOtp({ email: email });
+    if (!email) return;
+    const { data } = await sendOtp({ email: email });
+    console.log(data);
 
-    const {data} = await sendOtp({ email: email });
-    console.log(data)
+    dispatch(setOtp({ email: data.email, hash: data.hash }));
 
-    dispatch(setOtp({ email: data.email , hash: data.hash }))
-
-     onNext();
-   }
-
-  
+    onNext();
+  }
 
   return (
-    <Card style={styles.card} title="Enter Your Email" icon="email-1">
-
+    <Card style={styles.card} title="Enter Your Email" icon="email-1" num="4">
       <TextInput value={email} onChange={(e) => setEmail(e.target.value)} />
       <div>
         <div className={styles.actionButtonWrap}>
@@ -41,9 +36,8 @@ function Email({onNext}) {
       <p className={styles.bottomParagraph}>
         Please enter your Email Id <br /> to get otp
       </p>
-
     </Card>
-  )
+  );
 }
 
-export default Email
+export default Email;

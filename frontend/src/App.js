@@ -1,123 +1,151 @@
-
 import './App.css';
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './Pages/Home/Home';
 import Navigation from './Components/Shared/Navigation/Navigation';
 import Authenticate from './Pages/Authenticate/Authenticate';
 import Rooms from './Pages/Rooms/Rooms';
 import Activate from './Pages/Activate/Activate';
-import { useSelector } from "react-redux"
-
-
+import { useSelector } from 'react-redux';
+import { useLoadingWithRefresh } from './hooks/useLoadingWithRefresh';
 
 function App() {
+  const { user, isAuth } = useSelector((state) => state.auth);
+  const { loading } = useLoadingWithRefresh();
 
-  const { user , isAuth} = useSelector((state) => state.auth )
-
-
-  return (
+  return loading ? (
+    'loading...'
+  ) : (
     <>
-
       <BrowserRouter>
-
         <Navigation />
 
         <Routes>
+          {/* <Route path="/rooms" element={<Rooms />} /> */}
 
-          <Route path="/rooms" element={<Rooms />} />
-
-          <Route path="/" element={<Home />} />
-
-          {
-            isAuth ? (
-              <Route path="/" element={
-                <Activate />
-              } />
-            ) : (<Route path="/" element={<Home />} />)
-          }
-
-          {/* Authenticate page per jane ke liya */}
-          {
-            isAuth ? (
-              <Route path="/authenticate" element={
-                <Activate />
-              } />
-            ) : (<Route path="/authenticate" element={<Authenticate />} />)
-          }
-
-          {/* Activate ke ender na ja ske lisliya */}
-          {
-            !isAuth ? (
-              <Route path="/activate" element={
-                <SemiProtectedRoute pathRen="/" />
-              } />
-            )
-              : isAuth && !user.activated ? (<Route path="/activate" element={<Activate />} />) :
-                (<Route path="/activate" element= {<SemiProtectedRoute pathRen="/activate" />}/> )
-          }
+          {/* <Route path="/" element={<Home />} />
+          <Route path="/authenticate" element={<Authenticate />} /> */}
+          {/* <Route path="/activate" element={<Activate />} />  */}
 
           {/* room ke enter na ho isliya */}
+          {isAuth && user.activated ? (
+            <Route path="/" element={<Rooms />} />
+          ) : (
+            <Route path="/" element={<Home />} />
+          )}
 
-          {
-            !isAuth ? (
-              <Route path="/rooms" element={
-                <ProtectedRoute pathRen="/" />
-              } />
-            )
-              : isAuth && !user.activated ? (<Route path="/activate" element={<ProtectedRoute pathRen="/activate" />} />)
+          {isAuth && user.activated ? (
+            <Route path="/" element={<Rooms />} />
+          ) : (
+            <Route path="/rooms" element={<Home />} />
+          )}
 
-                : (<Route path="/rooms" element={<Rooms />} />)
+          {!isAuth && !user.activated ? (
+            <Route path="/rooms" element={<ProtectedRoute pathRen="/" />} />
+          ) : (
+            <Route path="/rooms" element={<Rooms />} />
+          )}
+          {!isAuth && !user.activated ? (
+            <Route path="/" element={<Home />} />
+          ) : (
+            <Route path="/rooms" element={<Rooms />} />
+          )}
 
-          }
+          {isAuth && user.activated ? (
+            <Route path="/rooms" element={<Rooms />} />
+          ) : (
+            <Route path="/rooms" element={<Home />} />
+          )}
 
+          {isAuth && !user.activated ? (
+            <Route
+              path="/rooms"
+              element={<ProtectedRoute pathRen="activate" />}
+            />
+          ) : (
+            <Route path="/rooms" element={<ProtectedRoute pathRen="/" />} />
+          )}
 
+          {!isAuth ? (
+            <Route path="/activate" element={<Home />} />
+          ) : (
+            <Route path="/activate" element={<Activate />} />
+          )}
 
+          {!isAuth ? (
+            <Route path="/" element={<Home />} />
+          ) : (
+            <Route path="/" element={<Activate />} />
+          )}
 
+          {!isAuth ? (
+            <Route path="rooms" element={<Home />} />
+          ) : (
+            <Route path="rooms" element={<Activate />} />
+          )}
 
+          {/* Authenticate page per jane ke liya */}
+          {isAuth ? (
+            <Route path="/authenticate" element={<Activate />} />
+          ) : (
+            <Route path="/authenticate" element={<Authenticate />} />
+          )}
+
+          {/* Activate ke ender na ja ske lisliya */}
+          {!isAuth ? (
+            <Route
+              path="/activate"
+              element={<SemiProtectedRoute pathRen="/authenticate" />}
+            />
+          ) : (
+            <Route
+              path="/activate"
+              element={<SemiProtectedRoute pathRen="/activate" />}
+            />
+          )}
+
+          {!isAuth ? (
+            <Route
+              path="/rooms"
+              element={<SemiProtectedRoute pathRen="/authenticate" />}
+            />
+          ) : (
+            <Route
+              path="/rooms"
+              element={<SemiProtectedRoute pathRen="/activate" />}
+            />
+          )}
         </Routes>
-
       </BrowserRouter>
     </>
   );
 }
 
-const GuestRoute = ({ location },) => (
-  <Navigate to={
-    {
-      pathname: "/rooms",
+const GuestRoute = ({ location }) => (
+  <Navigate
+    to={{
+      pathname: '/rooms',
       state: { from: location },
-    }
-  } />
-)
-
+    }}
+  />
+);
 
 const SemiProtectedRoute = ({ location }, pathRen) => (
-  <Navigate to={
-    {
+  <Navigate
+    to={{
       pathname: pathRen,
       state: { from: location },
-    }
-  } />
-)
-
+    }}
+  />
+);
 
 const ProtectedRoute = ({ location }, pathRen) => (
-  <Navigate to={
-    {
+  <Navigate
+    to={{
       pathname: pathRen,
       state: { from: location },
-    }
-  } />
-)
-
-
-
-
-
-
-
-
-
+    }}
+  />
+);
 
 // const GuestRoute = ({ children }) => {
 //   return (
@@ -133,9 +161,6 @@ const ProtectedRoute = ({ location }, pathRen) => (
 
 //   );
 // };
-
-
-
 
 // const SemiProtectedRoute = ({ children }) => {
 //   return (
@@ -174,6 +199,5 @@ const ProtectedRoute = ({ location }, pathRen) => (
 //   );
 
 // };
-
 
 export default App;

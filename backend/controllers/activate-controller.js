@@ -5,21 +5,24 @@ const path = require("path");
 const userService = require("../services/user-service");
 const UserDto = require("../dtos/user-dtos");
 const imageToBase64 = require("image-to-base64");
-const fs = require("fs")
+const fs = require("fs");
+// const passportData = require("../passport/passport.js");
 
+// const {user:userPass} = require("../passport/passport")
 class ActivateController {
   async activate(req, res) {
     // activation logic
 
     var { name, avatar, ava } = req.body;
-
+    let avaBuf;
     if (!avatar) {
       // agar direct path likenge to yoh root folder se find karne ki kosis kara ha
-      avatar = path.join( __dirname, `../avatar/av${ava}.png`);
+      avatar = path.join(__dirname, `../avatar/av${ava}.png`);
+
+      // it will return buffer
+      avaBuf = await fs.readFileSync(`${avatar}`);
     }
-    // itb will return buffer 
-    const avaBuf = fs.readFileSync(`${avatar}`)
-    console.log(avaBuf)
+    console.log(avaBuf);
 
     // console.log( typeof avatar)
     // console.log (`${avatar}`)
@@ -35,24 +38,22 @@ class ActivateController {
     //  image Base64
 
     const buffer = await Buffer.from(
-      avatar.replace(/^data:image\/png;base64,/, ""),
+      avatar.replace(/^data:image\/(png|jpg|jpeg);base64,/, ""),
       "base64"
     );
 
     console.log(typeof buffer);
 
-    if (typeof buffer === "object") {
+    if (avaBuf) {
       const defAva = await Jimp.read(avaBuf);
       try {
         defAva
           .resize(140, Jimp.AUTO)
           .write(path.resolve(__dirname, `../storage/${imagePath}`));
       } catch (err) {
-        res
-          .status(500)
-          .json({
-            message: "avatar not send tryed to set default avatar but failed",
-          });
+        res.status(500).json({
+          message: "avatar not send tryed to set default avatar but failed",
+        });
       }
 
       console.log("ok in object");
@@ -86,6 +87,22 @@ class ActivateController {
       res.status(500).json({ message: "something went wrong" });
     }
   }
+
+//   async passAuth(req,res){
+//  const userPass = user
+//     try {
+  
+//       if (!userPass) {
+//         res.status(404).json({ message: "User not found" });
+//       }
+
+
+//       res.json({ user: new UserDto(userPass), auth: true });
+//     } catch (err) {
+//       res.status(500).json({ message: "something went wrong" });
+//     }
+//   }
+  
 }
 
 module.exports = new ActivateController();

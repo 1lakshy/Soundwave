@@ -1,3 +1,43 @@
 .navbar{
-    padding:20px 0;
+    padding:10px 0;
+    margin-bottom:20px ;
+    margin-top:10px;
+    width: calc(100% - 8%);
+    height: 4rem;
+    display: flex;
+    justify-content: space-between;
+    border: .5px solid black ;
+ 
+ /* From https://css.glass */
+background: rgba(239, 163, 240, 0);
+border-radius: 4rem;
+box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+backdrop-filter: blur(8.7px);
+-webkit-backdrop-filter: blur(8.7px);
+border: 1px solid rgba(239, 163, 240, 0.11);
+
+}
+
+.navRight{
+    display: flex;
+    width: 10rem;
+    align-items: center;
+}
+
+.avatar{
+    border-radius: 50%;
+    position: absolute;
+    margin-top: 8px;
+    margin-left: 10px;
+}
+
+.userDetail{
+    width:5rem ;
+    height: 5rem;
+    background-size: cover; 
+    background-image: url("../../../../public/images/avatar-border-2.png")
+}
+.logout{
+    margin-top: 32px;
+    margin-left: -25px;
 }

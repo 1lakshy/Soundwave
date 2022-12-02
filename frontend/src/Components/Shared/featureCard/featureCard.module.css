@@ -1,0 +1,15 @@
+.featureCont{
+    width: 55%;
+    height: 50px;
+    background: yellow;
+    display: flex;
+    flex: 1;
+}
+
+.leftCont, .rightCont{
+    flex: 1;
+}
+
+.leftCont{
+    background: yellow;
+}

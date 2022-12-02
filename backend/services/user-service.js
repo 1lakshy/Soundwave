@@ -14,6 +14,11 @@ class UserService {
         return user;
     }
 
+    async createUserPass(data){
+
+        const user = await UserModel.create(data)
+        return user;
+    }
 }
 
 module.exports = new UserService();

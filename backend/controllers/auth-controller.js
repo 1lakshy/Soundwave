@@ -1,171 +1,261 @@
-const OtpService = require("../services/otp-service")
-const HashService = require("../services/hash-otp")
-const UserService = require("../services/user-service")
-const TokenService = require("../services/token-service")
+const OtpService = require("../services/otp-service");
+const HashService = require("../services/hash-otp");
+const UserService = require("../services/user-service");
+const TokenService = require("../services/token-service");
 const bcrypt = require("bcryptjs");
-const nodemailer = require("nodemailer")
-const UserDto = require("../dtos/user-dtos.js")
+const nodemailer = require("nodemailer");
+const UserDto = require("../dtos/user-dtos.js");
+const LOGOUT_URL = "http://localhost:5500/auth/logout"
 
 
 class AuthController {
+  async sendOtp(req, res) {
+    try {
+      // lOGIC
+      // const {phone} = req.body;
+      const { email } = req.body;
 
-    async sendOtp(req, res) {
+      if (!email) {
+        res.status(400).json({ message: "email Id is required!" });
+      }
 
-        try {
-            // lOGIC
-            // const {phone} = req.body;
-            const {email} = req.body;
+      // console.log(process.env.FROM_EMAIL)
 
-            if (!email) {
-                res.status(400).json({ message: "email Id is required!" });
-            }
+      // generate Otp
+      const otp = await OtpService.generateOtp();
+      console.log(otp);
 
-            // console.log(process.env.FROM_EMAIL)
+      // otp = 7856;
+      // res.json({ otp : otp})
 
-            // generate Otp
-            const otp = await OtpService.generateOtp();
-            console.log(otp)
+      // hashing
+      console.log("otp");
+      const ttl = 1000 * 60 * 10;
+      const expires = Date.now() + ttl;
+      const data1 = `${otp}`;
+      const data2 = `${expires}`;
+      const hash1 = await bcrypt.hash(data1, 10);
+      const hash2 = await bcrypt.hash(data2, 10);
 
-            // otp = 7856;
-            // res.json({ otp : otp})
+      const hash = `${hash1}.${hash2}`;
 
-            // hashing 
-            console.log("otp")
-            const ttl = 1000 * 60 * 10;
-            const expires = Date.now() + ttl
-            const data1 = `${otp}`;
-            const data2 = `${expires}`;
-            const hash1 = await bcrypt.hash(data1, 10);
-            const hash2 = await bcrypt.hash(data2, 10);
-           
-            const hash = `${hash1}.${hash2}`
+      console.log(hash);
 
-            console.log(hash)
+      // res.json({ hash : hash});
 
-            // res.json({ hash : hash});
+      // otp sending
+
+      try {
+        const transporter = nodemailer.createTransport({
+          service: "gmail",
+          secure: false,
+          auth: {
+            user: process.env.FROM_EMAIL,
+            pass: process.env.PASSWORD,
+          },
+        });
+
+        const mailOptions = {
+          from: process.env.FROM_EMAIL,
+          to: email,
+          subject: "Testing",
+          text: `Otp for Your Registration is ${otp}`,
+        };
+
+        transporter.sendMail(mailOptions, function (err, success) {
+          if (err) {
+            console.log(err);
+          } else {
+            res.json({
+              hash: `${hash}.${expires}`,
+              email,
+              otp,
+            });
+            console.log("Email send sucessful");
+          }
+        });
 
 
+      } catch (err) {
+        console.log(err);
+      }
 
-            // otp sending
 
-            try {
-                const transporter = nodemailer.createTransport({
-                    service: "gmail",
-                    secure: false,
-                    auth: {
-                        user: process.env.FROM_EMAIL,
-                        pass: process.env.PASSWORD
-                    }
+    } catch (err) {
+      res.status(404).send("error");
+    }
+  }
 
-                })
+  // verify otp
+  async verifyOtp(req, res) {
+    const { email } = req.body;
 
-                const mailOptions = {
-                    from: process.env.FROM_EMAIL,
-                    to: email,
-                    subject: "Testing",
-                    text: `Otp for Your Registration is ${otp}`,
-                }
+    try {
+      const { hash } = req.body;
+      console.log(hash);
+      const [halfHash1, halfHash2, newExpires] = hash.split(".");
 
-                transporter.sendMail(mailOptions, function (err, success) {
-                    if (err) {
-                        console.log(err)
-                    } else {
-                        res.json({
-                            hash: `${hash}.${expires}`,
-                            email,
-                            otp
-                        })
-                        console.log("Email send sucessful")
-                    }
-                })
-            } catch (err) {
-                console.log(err)
-            }
+      const hashedOtp = `${halfHash1}.${halfHash2}`;
+      console.log(newExpires);
 
-        } catch (err) {
-            res.status(404).send("error")
+      if (!hashedOtp || !hash || !newExpires) {
+        res.status(400).json({ message: "error from client side" });
+      }
+
+      if (Date.now() > +newExpires) {
+        res.status(400).json({ otp: "expires!!" });
+      }
+
+      const { otp } = req.body;
+
+      const data = `${otp}.${newExpires}`;
+      const newHash = await bcrypt.hash(data, 10);
+
+      const validating = await bcrypt.compare(hashedOtp, newHash);
+      if (validating) {
+        console.log("mached");
+      }
+
+      let user;
+
+      try {
+        user = await UserService.findUser({ email: email });
+
+        if (!user) {
+          user = await UserService.createUser({ email: email });
         }
+      } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "error in userCreating" });
+      }
+
+      // Token
+
+      const { accessToken, refreshToken } = TokenService.generateTokens({
+        _id: user._id,
+        activated: false,
+      });
+
+      await TokenService.storeRefreshToken(refreshToken, user._id);
+      res.cookie("refreshToken", refreshToken, {
+        expires: new Date(Date.now() + 1000 * 60 * 60 * 60 * 24 * 30),
+        httpOnly: true,
+      });
+
+      res.cookie("accessToken", accessToken, {
+        expires: new Date(Date.now() + 1000 * 60 * 60 * 60 * 24 * 30),
+        httpOnly: true,
+      });
+
+      const userDto = new UserDto(user);
+      res.json({ auth: true, user: userDto });
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async refresh(req, res) {
+    // refreshToken from cookies
+    const { refreshToken: refreshTokenFromCookie } = req.cookies;
+
+    // verifying refreshToken
+
+    let userData;
+    try {
+      userData = await TokenService.verifyRefreshToken(refreshTokenFromCookie);
+    } catch (err) {
+      return res.status(401).json({ message: "Invalid Token" });
+    }
+    console.log(userData)
+
+    // check token in db
+    try {
+      const token = await TokenService.findRefreshToken(
+        userData._id,
+        refreshTokenFromCookie
+      );
+      if (!token) {
+        return res.status(401).json({
+          message: " token does not exist in db",
+        });
+      }
+    } catch (err) {
+      return res.status(500).json({
+        message: " Internal error while checking token in db",
+      });
     }
 
-    async verifyOtp(req, res) {
 
-    const {email} = req.body
+    // check if user is valid
+    const user = await UserService.findUser({ _id: userData._id});
+    if(!user){
+    return res.status(401).json({ message:"user Does not exist"})
+    }
 
-        try {
-            const {hash} = req.body
-            console.log(hash)
-            const [halfHash1,halfHash2, newExpires] = hash.split(".");
+    // Generating new tokens
+    const {refreshToken,accessToken} = TokenService.generateTokens({
+      _id: userData._id,
+    })
 
-            const hashedOtp = `${halfHash1}.${halfHash2}`
-            console.log(newExpires)
-
-
-            if (!hashedOtp || !hash || !newExpires) {
-                res.status(400).json({ message: "error from client side" });
-            }
-
-            if (Date.now() > +newExpires) {
-                res.status(400).json({ otp: "expires!!" })
-            }
-
-            const {otp} = req.body
-
-            const data = `${otp}.${newExpires}`;
-            const newHash = await bcrypt.hash(data, 10)
-
-            const validating = await bcrypt.compare(hashedOtp, newHash)
-            if (validating) {
-                console.log("mached")
-            }
-
-            let user;
-
-
-            try{
-
-                user = await UserService.findUser({ email: email});
-
-                if(!user){
-                 user = await UserService.createUser({ email: email});
-                }
-
-            }catch(err){
-                console.log(err)
-                res.status(500).json({ message: "error in userCreating"})
-
-            }
-
-            // Token 
-
-            const {accessToken,refreshToken} = TokenService.generateTokens({
-                _id: user._id , 
-                activated: false
-            })
-
-
-            await TokenService.storeRefreshToken(refreshToken , user._id)
-             res.cookie("refreshToken", refreshToken,  {
-                expires: new Date(Date.now() + 1000 * 60 * 60 * 60 * 24 * 30) ,
-                httpOnly : true
-            })
-
-             res.cookie("accessToken", accessToken,  {
-                expires: new Date(Date.now() + 1000 * 60 * 60 * 60 * 24 * 30) ,
-                httpOnly : true
-            })
-
-
-            const userDto = new UserDto(user)
-            res.json({ auth:true , user: userDto})
-
-
-        } catch (err) {
-            console.log(err)
-        }
+    // updating refresh token in db
+    console.log(refreshToken)
+    console.log(userData._id)
+    try{
+      await TokenService.updateRefreshToken(userData._id,refreshToken)
+    }catch(err){
+      console.log(err)
+      return res.status(500).json({message:"internal error updating refresh  "})
     }
 
 
+    // adding to cookie
+    res.cookie("refreshToken", refreshToken, {
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 60 * 24 * 30),
+      httpOnly: true,
+    });
 
+    res.cookie("accessToken", accessToken, {
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 60 * 24 * 30),
+      httpOnly: true,
+    });
+
+    const userDto = new UserDto(user);
+    res.json({ auth: true, user: userDto });
+
+
+    console.log("ok refresh")
+  }
+
+
+  async logout(req,res){
+    try{
+      
+      const {refreshToken,know} = req.cookies;
+      // delet token from db
+     await TokenService.removeToken(refreshToken)
+  
+      // remove cookies
+      res.clearCookie("refreshToken")
+      res.clearCookie("accessToken")
+      res.clearCookie("Avatar")
+      res.clearCookie("Name")
+      res.status(200).json({ user:{
+  
+      activated: false,
+      email:"",
+      name:"",
+      avatar:""
+     }
+      , auth:false})
+    
+        // res.redirect("/auth/logout")
+
+
+    }catch(err){
+      res.status(500).json({ message: "error from logout side"})
+    }
+
+  }
 }
 
 module.exports = new AuthController();

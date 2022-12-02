@@ -1,0 +1,73 @@
+
+.card {
+    width: 450px;
+    max-width: 90%;
+    min-height: 300px;
+    /* From https://css.glass */
+    /* background: rgba(178, 75, 243, 0.32);
+    border-radius: 16px; */
+    /* box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(3.9px);
+    -webkit-backdrop-filter: blur(3.9px);
+    border: 1px solid rgba(178, 75, 243, 0.11); */
+    padding: 30px;
+    text-align: center;
+    border-radius: 25px;
+    color: #653e26;
+    background-size: 200px 200px;
+    background-repeat: no-repeat;
+    
+}
+
+.authBox{
+    width: 15rem;
+    height: 3rem;
+    margin-bottom: .25rem;
+    border: .125px solid white;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    border-radius: 25px;
+}
+
+
+.social{
+    width: 20rem;
+    height: 20rem;
+}
+
+.belowCard{
+    display: flex;
+}
+
+.authCont{
+    margin: 2rem 1rem;
+
+}
+
+.btn{
+    margin: 1rem 0;
+}
+
+.google{
+    /* From https://css.glass */
+
+
+    background: rgba(234, 97, 97, 0.47);
+border-radius: 16px;
+box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+backdrop-filter: blur(3.3px);
+-webkit-backdrop-filter: blur(3.3px);
+border: 1px solid rgba(234, 97, 97, 1);
+}
+
+.facebook{
+    /* From https://css.glass */
+background: rgba(12, 79, 246, 0.47);
+border-radius: 16px;
+box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+backdrop-filter: blur(3.3px);
+-webkit-backdrop-filter: blur(3.3px);
+border: 1px solid rgba(12, 79, 246, 1);
+}
+
